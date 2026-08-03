@@ -133,51 +133,29 @@
       perspective: 1200px;
     }
     /*
-     * Анимации ТОЛЬКО если motion разрешён. Иначе контент остаётся видимым:
-     * раньше opacity:0 + animation ломали страницу, когда анимация не доигрывала
-     * (reduced-motion / блокировщики) — экран был пустым.
+     * Вход hero без opacity:0 / clip-path.
+     * Прятать контент нельзя: при сбое анимации или IO страница остаётся чёрной.
+     * Движение только поверх уже видимого текста/телефона.
      */
     @media (prefers-reduced-motion: no-preference) {
-      .eyebrow {
-        opacity: 0;
-        animation: tick-in 0.45s ease 0.05s forwards;
-      }
       .brand .brand-line {
-        opacity: 0;
-        transform: translateY(0.35em) scale(1.18);
-        filter: blur(4px);
+        transform: translateY(0.2em) scale(1.06);
         animation: brand-stamp 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
       }
       .brand .brand-line:nth-child(2) { animation-delay: 0.12s; }
       .brand .brand-line:nth-child(3) { animation-delay: 0.24s; }
-      .hero-line {
-        opacity: 0;
-        animation: tick-in 0.5s ease 0.45s forwards;
-      }
-      .hero-meta span {
-        opacity: 0;
-        transform: translateX(-8px);
-        animation: tick-in 0.4s ease forwards;
-      }
-      .hero-meta span:nth-child(1) { animation-delay: 0.55s; }
-      .hero-meta span:nth-child(2) { animation-delay: 0.65s; }
-      .hero-meta span:nth-child(3) { animation-delay: 0.75s; }
       .hero-visual .device {
-        opacity: 0;
-        transform: translateY(40px) rotateX(8deg) scale(0.94);
+        transform: translateY(24px) rotateX(6deg) scale(0.97);
         transform-origin: 50% 80%;
-        animation: phone-rise 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.35s forwards;
+        animation: phone-rise 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards;
       }
     }
     @keyframes brand-stamp {
-      60% { opacity: 1; filter: blur(0); transform: translateY(-0.04em) scale(0.98); }
-      100% { opacity: 1; filter: blur(0); transform: translateY(0) scale(1); }
-    }
-    @keyframes tick-in {
-      to { opacity: 1; transform: none; }
+      60% { transform: translateY(-0.03em) scale(0.99); }
+      100% { transform: translateY(0) scale(1); }
     }
     @keyframes phone-rise {
-      to { opacity: 1; transform: translateY(0) rotateX(0) scale(1); }
+      to { transform: translateY(0) rotateX(0) scale(1); }
     }
 
     section {
@@ -800,30 +778,11 @@
     .close-cta:active { transform: translateY(1px) scale(0.98); }
 
     /*
-     * Scroll-reveal прячет контент ТОЛЬКО когда JS повесил html.motion.
-     * Без JS / при reduced-motion класс не ставится — страница всегда читаема.
+     * Scroll-reveal НЕ используем: clip-path: inset(...) давал intersection=0,
+     * IntersectionObserver никогда не ставил .in — секции оставались невидимыми.
+     * Движение только hover / декоративные ленты.
      */
     @media (prefers-reduced-motion: no-preference) {
-      html.motion .reveal:not(.in) {
-        opacity: 0;
-        transform: translateY(28px);
-        clip-path: inset(0 0 100% 0);
-      }
-      html.motion .reveal {
-        transition:
-          opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
-          transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
-          clip-path 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-      }
-      html.motion .reveal.in {
-        opacity: 1;
-        transform: none;
-        clip-path: inset(0 0 0 0);
-      }
-      html.motion .reveal-delay-1 { transition-delay: 0.08s; }
-      html.motion .reveal-delay-2 { transition-delay: 0.16s; }
-      html.motion .reveal-delay-3 { transition-delay: 0.24s; }
-
       .shot, .stand, .dna-cell {
         transition: border-color 0.25s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
       }
@@ -850,6 +809,7 @@
 
     @media (prefers-reduced-motion: reduce) {
       .tape-page, .hazard, .hero::before { animation: none !important; }
+      .brand .brand-line, .hero-visual .device { animation: none !important; transform: none !important; }
     }
     footer {
       padding: 1.5rem clamp(1.25rem, 5vw, 4.5rem) 2.5rem;
@@ -1355,29 +1315,5 @@
     SuppCheck visual pitch · TrenTwins / Feral · UI mirrors production app · Not an official partnership
   </footer>
   <div class="tape-page" aria-hidden="true"></div>
-
-<script>
-  (function () {
-    // Без motion — ничего не прячем. Класс html.motion включает hide→reveal в CSS.
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-
-    document.documentElement.classList.add('motion');
-
-    var nodes = document.querySelectorAll('.reveal, .world-hero, .pair, .world-trio .stand, .shots .shot, .map > dl, .map > aside');
-    nodes.forEach(function (el) {
-      if (!el.classList.contains('reveal')) el.classList.add('reveal');
-    });
-
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add('in');
-        io.unobserve(entry.target);
-      });
-    }, { threshold: 0.12, rootMargin: '0px 0px -5% 0px' });
-
-    document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
-  })();
-</script>
 </body>
 </html>
