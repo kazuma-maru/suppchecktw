@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SuppCheck × TrenTwins — Visual Pitch</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* Токены = sportpit-app/constants/theme.ts */
+    :root {
+      --bg: #070707;
+      --surface: #111111;
+      --surface-alt: #161616;
+      --border: #262626;
+      --border-strong: #3a3a3a;
+      --accent: #ff4d00;
+      --success: #c8f542;
+      --warn: #f5c400;
+      --danger: #ff2d55;
+      --text: #ece7dc;
+      --text-soft: #c8c2b4;
+      --text-muted: #8a857a;
+      --text-faint: #6e6a60;
+      --on-accent: #0a0a0a;
+      --score-a: #d4ff4a;
+      --score-b: #f5c400;
+      --score-c: #ff4d00;
+      --line: rgba(236, 231, 220, 0.12);
+      --radius-sm: 4px;
+      --radius-md: 6px;
+      --radius-lg: 8px;
+      --radius-xl: 10px;
+      --ui-font: system-ui, -apple-system, "Segoe UI", Archivo, sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: Archivo, system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+    a { color: inherit; }
+
+    .tape-page {
+      height: 14px;
+      background: repeating-linear-gradient(-45deg, var(--warn) 0 12px, #111 12px 24px);
+    }
+
+    /* ——— page chrome ——— */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      align-items: end;
+      background:
+        radial-gradient(ellipse 55% 45% at 78% 35%, rgba(255, 77, 0, 0.14), transparent 60%),
+        var(--bg);
+    }
+    .hero-copy {
+      padding: clamp(2rem, 5vw, 4.5rem);
+      padding-bottom: clamp(3rem, 8vw, 6rem);
+    }
+    .eyebrow {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.25rem;
+    }
+    .brand {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: clamp(4.5rem, 12vw, 9rem);
+      line-height: 0.88;
+      letter-spacing: 0.02em;
+    }
+    .brand em { font-style: normal; color: var(--accent); }
+    .hero-line {
+      margin-top: 1.5rem;
+      max-width: 28ch;
+      font-size: clamp(1.05rem, 2vw, 1.25rem);
+      font-weight: 500;
+      color: rgba(236, 231, 220, 0.82);
+    }
+    .hero-meta {
+      margin-top: 2rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem 1.5rem;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+    }
+    .hero-visual {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+
+    section {
+      padding: clamp(3.5rem, 8vw, 7rem) clamp(1.25rem, 5vw, 4.5rem);
+      border-top: 1px solid var(--line);
+    }
+    .sec-label {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    h2 {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: clamp(2.6rem, 6vw, 4.2rem);
+      line-height: 0.95;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.25rem;
+      max-width: 16ch;
+    }
+    .lede {
+      max-width: 52ch;
+      color: rgba(236, 231, 220, 0.78);
+      font-size: 1.05rem;
+    }
+
+    .dna-grid {
+      margin-top: 3rem;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+    }
+    .dna-cell { background: var(--surface); padding: 1.75rem 1.5rem; }
+    .dna-cell h3 {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 1.75rem;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.6rem;
+    }
+    .dna-cell p { color: rgba(236, 231, 220, 0.7); font-size: 0.95rem; }
+    .swatches { display: flex; gap: 0.5rem; margin-top: 1.25rem; flex-wrap: wrap; }
+    .swatch { width: 36px; height: 36px; border: 1px solid rgba(255,255,255,0.15); }
+    .swatch span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+
+    /* ——— photo plates: same UI phones, staged ——— */
+    .shots {
+      margin-top: 3rem;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+    .shot {
+      position: relative;
+      background:
+        radial-gradient(ellipse at 30% 20%, rgba(255, 77, 0, 0.08), transparent 50%),
+        linear-gradient(160deg, #141414 0%, #0a0a0a 55%, #12100e 100%);
+      border: 1px solid var(--line);
+      padding: 2rem 1rem 2.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      overflow: hidden;
+    }
+    .shot::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      opacity: 0.18;
+      background:
+        radial-gradient(circle at 20% 80%, rgba(236, 231, 220, 0.35) 0 1px, transparent 2px),
+        radial-gradient(circle at 70% 60%, rgba(236, 231, 220, 0.25) 0 1.5px, transparent 2px),
+        radial-gradient(circle at 45% 30%, rgba(236, 231, 220, 0.2) 0 1px, transparent 2px);
+      background-size: 120px 90px, 80px 110px, 100px 100px;
+      pointer-events: none;
+    }
+    .shot-cap {
+      position: relative;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* ——— DEVICE: один корпус, стекло, без «выделенного» экрана ——— */
+    .device {
+      position: relative;
+      width: min(280px, 100%);
+      aspect-ratio: 9 / 19.4;
+      background: linear-gradient(160deg, #222 0%, #0c0c0c 40%, #050505 100%);
+      border-radius: 38px;
+      padding: 11px 9px 13px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.12),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.6),
+        0 1px 2px rgba(0, 0, 0, 0.4),
+        0 18px 40px rgba(0, 0, 0, 0.55);
+      display: flex;
+      flex-direction: column;
+      z-index: 1;
+      isolation: isolate;
+    }
+    .device::before {
+      /* тонкая рамка «металла» вокруг стекла */
+      content: "";
+      position: absolute;
+      inset: 8px;
+      border-radius: 30px;
+      border: 1px solid rgba(0, 0, 0, 0.85);
+      pointer-events: none;
+      z-index: 4;
+    }
+    .device::after {
+      /* блик стекла — экран не светится как стикер */
+      content: "";
+      position: absolute;
+      inset: 10px 9px 12px;
+      border-radius: 26px;
+      background: linear-gradient(
+        125deg,
+        rgba(255, 255, 255, 0.1) 0%,
+        rgba(255, 255, 255, 0.02) 22%,
+        transparent 42%,
+        transparent 70%,
+        rgba(255, 255, 255, 0.03) 100%
+      );
+      pointer-events: none;
+      z-index: 6;
+      mix-blend-mode: soft-light;
+    }
+    .device.lg { width: min(300px, 88%); }
+    .island {
+      position: absolute;
+      top: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 28%;
+      height: 18px;
+      background: #000;
+      border-radius: 12px;
+      z-index: 7;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+    }
+    .app {
+      flex: 1;
+      border-radius: 28px;
+      overflow: hidden;
+      /* чуть приглушён — как OLED в тёмном зале, не HDR-плакат */
+      filter: brightness(0.88) contrast(0.96) saturate(0.92);
+      background:
+        radial-gradient(ellipse 70% 35% at 75% 0%, rgba(255, 77, 0, 0.07), transparent 55%),
+        radial-gradient(ellipse 55% 30% at 15% 100%, rgba(255, 122, 24, 0.05), transparent 50%),
+        var(--bg);
+      display: flex;
+      flex-direction: column;
+      font-family: var(--ui-font);
+      color: var(--text);
+    }
+    .app-scroll {
+      flex: 1;
+      overflow: hidden;
+      padding: 36px 14px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .app-logo {
+      font-size: 22px;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-align: center;
+      text-transform: uppercase;
+      color: var(--text);
+      line-height: 1.1;
+    }
+    .app-sub {
+      margin-top: 4px;
+      font-size: 8px;
+      font-weight: 500;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      text-align: center;
+      color: var(--text-muted);
+    }
+    .hazard {
+      margin-top: 10px;
+      height: 7px;
+      border-radius: 1px;
+      background: repeating-linear-gradient(-45deg, var(--warn) 0 7px, var(--bg) 7px 14px);
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .drop {
+      height: 118px;
+      border: 2px dashed var(--border-strong);
+      border-radius: var(--radius-lg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .drop-icon { font-size: 28px; line-height: 1; }
+    .drop-text {
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--text-faint);
+    }
+
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .btn {
+      border-radius: var(--radius-md);
+      padding: 9px 4px;
+      text-align: center;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+    }
+    .btn-quiet {
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      color: var(--text-soft);
+    }
+    .btn-accent {
+      background: var(--accent);
+      border: 1px solid var(--accent);
+      color: var(--on-accent);
+    }
+    .field {
+      background: var(--surface-alt);
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-md);
+      padding: 9px 10px;
+      font-size: 10px;
+      color: var(--text-faint);
+    }
+
+    /* Result */
+    .score-row { display: flex; gap: 10px; align-items: center; }
+    .score-box {
+      width: 58px;
+      height: 58px;
+      border: 3px solid var(--success);
+      border-radius: var(--radius-sm);
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+      font-weight: 900;
+      color: var(--success);
+      flex-shrink: 0;
+      box-shadow: 0 0 12px rgba(200, 245, 66, 0.35);
+    }
+    .stamp {
+      display: inline-block;
+      border: 2px solid var(--success);
+      color: var(--success);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      padding: 2px 8px;
+      border-radius: var(--radius-sm);
+      transform: rotate(-4deg);
+      margin-bottom: 5px;
+    }
+    .prod-brand {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+    .prod-name { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+    .section-title {
+      margin-top: 4px;
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+    .body {
+      font-size: 9.5px;
+      line-height: 1.4;
+      color: var(--text-soft);
+    }
+    .divider { height: 1px; background: var(--border); margin: 2px 0; }
+    .mini-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+    .mini {
+      background: var(--surface-alt);
+      border-radius: var(--radius-md);
+      padding: 8px;
+      border: 1px solid var(--border);
+    }
+    .mini-label {
+      font-size: 8px;
+      color: var(--text-muted);
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+    .mini-text { font-size: 9px; line-height: 1.35; color: var(--text-soft); }
+
+    /* History */
+    .hist-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .hist-badge {
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-sm);
+      border: 2px solid;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 900;
+      background: var(--bg);
+      flex-shrink: 0;
+    }
+    .hist-info { flex: 1; min-width: 0; }
+    .hist-brand {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .hist-name { font-size: 9px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .hist-date { font-size: 8px; color: var(--text-faint); margin-top: 2px; letter-spacing: 0.4px; }
+    .hist-verdict {
+      font-size: 9px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      max-width: 48px;
+      text-align: right;
+    }
+
+    .scale {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: 8px;
+    }
+    .scale-title {
+      font-size: 8px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-align: center;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .scale-row { display: flex; justify-content: space-between; }
+    .scale-item { text-align: center; }
+    .scale-letter { font-size: 12px; font-weight: 900; }
+    .scale-text { font-size: 7px; color: var(--text-faint); margin-top: 1px; }
+
+    .tabbar {
+      margin-top: auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 8px 4px 10px;
+    }
+    .tab {
+      text-align: center;
+      font-size: 8px;
+      font-weight: 700;
+      color: var(--text-faint);
+    }
+    .tab.on { color: var(--accent); }
+    .tab-ico { display: block; font-size: 12px; margin-bottom: 2px; }
+
+    .phones-note {
+      margin-top: 1.25rem;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+    }
+
+    /* ——— Lifestyle: продукты отдельно, телефон — один и цельный ——— */
+    .world { margin-top: 3rem; display: grid; gap: 1.5rem; }
+    .world-hero {
+      position: relative;
+      min-height: clamp(300px, 48vh, 520px);
+      overflow: hidden;
+      background: #0a0a0a;
+    }
+    .world-hero img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .world-hero-fade {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(7,7,7,0.78) 0%, rgba(7,7,7,0.2) 42%, transparent 68%),
+        linear-gradient(0deg, rgba(7,7,7,0.5) 0%, transparent 45%);
+      pointer-events: none;
+    }
+    .world-hero-copy {
+      position: absolute;
+      left: clamp(1.25rem, 4vw, 2.5rem);
+      bottom: clamp(1.25rem, 4vw, 2.5rem);
+      z-index: 2;
+      max-width: 26ch;
+    }
+    .world-hero-copy h3 {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      line-height: 0.95;
+      letter-spacing: 0.03em;
+    }
+    .world-hero-copy p {
+      margin-top: 0.65rem;
+      font-size: 0.95rem;
+      color: rgba(236, 231, 220, 0.78);
+    }
+
+    /* Продукт слева, один телефон справа — не клеим UI на фото телефона */
+    .pair {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 1.25rem;
+      align-items: stretch;
+      min-height: 480px;
+    }
+    .pair-photo {
+      position: relative;
+      overflow: hidden;
+      background: #0a0a0a;
+    }
+    .pair-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .pair-photo span {
+      position: absolute;
+      left: 1rem;
+      bottom: 1rem;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(236, 231, 220, 0.85);
+      text-shadow: 0 2px 10px rgba(0,0,0,0.7);
+    }
+    .pair-phone {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 1.5rem;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 40%, rgba(40, 28, 18, 0.55), transparent 70%),
+        #0a0a0a;
+      overflow: hidden;
+    }
+    .pair-phone::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url("feral-scene-flat.png") center / cover no-repeat;
+      opacity: 0.14;
+      filter: blur(14px) saturate(0.7);
+      transform: scale(1.15);
+      pointer-events: none;
+    }
+    .pair-phone .device {
+      width: min(260px, 78%);
+      transform: perspective(900px) rotateY(-8deg) rotateX(2deg);
+    }
+
+    .world-trio {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+    .stand {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 1.1rem;
+      min-height: 520px;
+      padding: 2rem 1rem 1.5rem;
+      overflow: hidden;
+      background: #0a0a0a;
+    }
+    .stand-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.22;
+      filter: blur(10px) brightness(0.55) saturate(0.75);
+      transform: scale(1.12);
+      pointer-events: none;
+    }
+    .stand-veil {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 55% 45% at 50% 55%, rgba(7,7,7,0.15), rgba(7,7,7,0.88) 75%);
+      pointer-events: none;
+    }
+    .stand .device {
+      width: min(230px, 78%);
+      position: relative;
+      z-index: 1;
+      transform: perspective(800px) rotateX(4deg);
+    }
+    .stand-cap {
+      position: relative;
+      z-index: 1;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .map { margin-top: 3rem; display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .map dl { display: grid; gap: 1rem; }
+    .map dt {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 0.04em;
+      color: var(--accent);
+    }
+    .map dd { color: rgba(236, 231, 220, 0.72); font-size: 0.95rem; margin-top: 0.25rem; }
+    .keep { background: var(--surface); border: 1px solid var(--line); padding: 1.75rem; }
+    .keep ul { list-style: none; margin-top: 1rem; display: grid; gap: 0.75rem; }
+    .keep li {
+      padding-left: 1.1rem;
+      position: relative;
+      color: rgba(236, 231, 220, 0.78);
+      font-size: 0.95rem;
+    }
+    .keep li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.55em;
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+    }
+
+    .close {
+      min-height: 50vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background:
+        radial-gradient(ellipse 50% 60% at 20% 80%, rgba(255, 77, 0, 0.12), transparent 55%),
+        var(--bg);
+    }
+    .close-cta {
+      margin-top: 2rem;
+      display: inline-flex;
+      font-family: "Bebas Neue", sans-serif;
+      font-size: 1.5rem;
+      letter-spacing: 0.08em;
+      color: var(--on-accent);
+      background: var(--accent);
+      padding: 0.9rem 1.4rem;
+      width: fit-content;
+      text-decoration: none;
+    }
+    footer {
+      padding: 1.5rem clamp(1.25rem, 5vw, 4.5rem) 2.5rem;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      border-top: 1px solid var(--line);
+    }
+
+    @media (max-width: 960px) {
+      .hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-visual { min-height: auto; order: -1; padding: 1.5rem 1.25rem 0; }
+      .dna-grid, .shots, .map, .pair, .world-trio { grid-template-columns: 1fr; }
+      .pair { min-height: auto; }
+      .pair-photo { min-height: 280px; }
+      .pair-phone .device, .stand .device { transform: none; width: min(260px, 70%); }
+      .stand { min-height: 480px; }
+      .world-hero-copy { max-width: 22ch; }
+    }
+  </style>
+</head>
+<body>
+  <div class="tape-page" aria-hidden="true"></div>
+
+  <header class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow">Private visual pitch · SuppCheck × Feral</p>
+      <h1 class="brand">SUPPCHECK<br /><em>FOR</em><br />FERAL</h1>
+      <p class="hero-line">
+        Screens below are the same UI as the live Expo app — not a separate design.
+      </p>
+      <div class="hero-meta">
+        <span>Scan → Score → Verdict</span>
+        <span>S for Feral</span>
+        <span>Tokens from theme.ts</span>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <!-- HOME — как app/(tabs)/home.tsx -->
+      <div class="device lg" aria-label="SuppCheck home — matches app">
+        <div class="island"></div>
+        <div class="app">
+          <div class="app-scroll">
+            <div>
+              <div class="app-logo">SUPPCHECK</div>
+              <div class="app-sub">No bullshit label check</div>
+              <div class="hazard"></div>
+            </div>
+            <div class="card">
+              <div class="drop">
+                <div class="drop-icon">📷</div>
+                <div class="drop-text">SHOOT THE INGREDIENT PANEL</div>
+              </div>
+              <div class="row2">
+                <div class="btn btn-ghost">CAMERA</div>
+                <div class="btn btn-quiet">LIBRARY</div>
+              </div>
+              <div class="field">Price, $ (optional)</div>
+              <div class="btn btn-accent">ANALYZE</div>
+            </div>
+            <div class="scale">
+              <div class="scale-title">SuppCheck scale</div>
+              <div class="scale-row">
+                <div class="scale-item"><div class="scale-letter" style="color:var(--success)">S</div><div class="scale-text">Elite</div></div>
+                <div class="scale-item"><div class="scale-letter" style="color:var(--score-a)">A</div><div class="scale-text">Great</div></div>
+                <div class="scale-item"><div class="scale-letter" style="color:var(--score-b)">B</div><div class="scale-text">Solid</div></div>
+                <div class="scale-item"><div class="scale-letter" style="color:var(--score-c)">C</div><div class="scale-text">Average</div></div>
+                <div class="scale-item"><div class="scale-letter" style="color:#ff9100">D</div><div class="scale-text">Weak</div></div>
+                <div class="scale-item"><div class="scale-letter" style="color:var(--danger)">F</div><div class="scale-text">Scam</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="tabbar">
+            <div class="tab on"><span class="tab-ico">▣</span>Scan</div>
+            <div class="tab"><span class="tab-ico">◷</span>History</div>
+            <div class="tab"><span class="tab-ico">☺</span>Profile</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section id="read">
+    <p class="sec-label">01 · Brand read</p>
+    <h2>FERAL IS NOT WELLNESS</h2>
+    <p class="lede">
+      TrenTwins built Feral on gym-floor honesty: loud names
+      (<em style="font-style:normal;color:var(--accent)">Stimmed As Fck</em>,
+      <em style="font-style:normal;color:var(--accent)">Fck'n Pumped</em>),
+      matte black, zero spa polish. The app mirrors that — same tokens as production.
+    </p>
+    <div class="dna-grid">
+      <article class="dna-cell">
+        <h3>VOICE</h3>
+        <p>Blunt. Short verbs. All caps when it matters. No wellness journey copy.</p>
+      </article>
+      <article class="dna-cell">
+        <h3>SURFACE</h3>
+        <p>Void #070707, chalk #ece7dc, flare #ff4d00, tape #f5c400 — from theme.ts.</p>
+        <div class="swatches">
+          <div class="swatch" style="background:#070707"><span>bg</span></div>
+          <div class="swatch" style="background:#111111"><span>surface</span></div>
+          <div class="swatch" style="background:#ece7dc"><span>text</span></div>
+          <div class="swatch" style="background:#ff4d00"><span>accent</span></div>
+          <div class="swatch" style="background:#f5c400"><span>warn</span></div>
+          <div class="swatch" style="background:#c8f542"><span>success</span></div>
+        </div>
+      </article>
+      <article class="dna-cell">
+        <h3>SIGNATURE</h3>
+        <p>Square stencil score + rubber-stamp BUY/OK/AVOID + hazard tape under headers.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="world">
+    <p class="sec-label">02 · In their world</p>
+    <h2>FERAL PRODUCT. REAL ROOM.</h2>
+    <p class="lede">
+      Product photos stay product photos. The phone is a single device with the live SuppCheck UI — never stacked on another phone.
+    </p>
+
+    <div class="world">
+      <!-- Только продукты — без телефона на фото -->
+      <figure class="world-hero">
+        <img src="feral-scene-hero.png" alt="Feral whey and pre-workout tubs with chalk and plate" />
+        <div class="world-hero-fade" aria-hidden="true"></div>
+        <div class="world-hero-copy">
+          <h3>THEIR TUBS.<br />OUR SCANNER.</h3>
+          <p>Matte black. Chalk. No spa lighting.</p>
+        </div>
+      </figure>
+
+      <!-- Продукт | один телефон -->
+      <div class="pair">
+        <figure class="pair-photo">
+          <img src="feral-scene-tub.png" alt="Feral pre-workout tub on gym mat" />
+          <span>Feral · Pre</span>
+        </figure>
+        <div class="pair-phone">
+          <div class="device" aria-label="Result S BUY">
+            <div class="island"></div>
+            <div class="app">
+              <div class="app-scroll">
+                <div>
+                  <div class="app-logo" style="font-size:16px">SUPPCHECK</div>
+                  <div class="app-sub">No bullshit label check</div>
+                  <div class="hazard"></div>
+                </div>
+                <div class="card" style="gap:8px">
+                  <div class="score-row">
+                    <div class="score-box" style="width:48px;height:48px;font-size:28px">S</div>
+                    <div>
+                      <div class="stamp" style="font-size:10px">BUY</div>
+                      <div class="prod-brand" style="font-size:10px">Feral Supplements</div>
+                      <div class="prod-name">Stimmed As Fck</div>
+                    </div>
+                  </div>
+                  <div class="divider"></div>
+                  <div class="section-title">Verdict</div>
+                  <p class="body">Elite stack. Transparent doses. S-tier — buy it.</p>
+                  <div class="btn btn-accent" style="font-size:9px;padding:8px 2px">NEW SCAN</div>
+                </div>
+              </div>
+              <div class="tabbar">
+                <div class="tab on"><span class="tab-ico">▣</span>Scan</div>
+                <div class="tab"><span class="tab-ico">◷</span>History</div>
+                <div class="tab"><span class="tab-ico">☺</span>Profile</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Три телефона на приглушённом фоне продуктов — один девайс на стенд -->
+      <div class="world-trio">
+        <div class="stand">
+          <img class="stand-bg" src="feral-scene-flat.png" alt="" aria-hidden="true" />
+          <div class="stand-veil" aria-hidden="true"></div>
+          <div class="device">
+            <div class="island"></div>
+            <div class="app">
+              <div class="app-scroll">
+                <div>
+                  <div class="app-logo" style="font-size:14px">SUPPCHECK</div>
+                  <div class="app-sub">No bullshit label check</div>
+                  <div class="hazard"></div>
+                </div>
+                <div class="card">
+                  <div class="drop" style="height:70px">
+                    <div class="drop-icon" style="font-size:20px">📷</div>
+                    <div class="drop-text">SHOOT THE INGREDIENT PANEL</div>
+                  </div>
+                  <div class="row2">
+                    <div class="btn btn-ghost" style="padding:7px 2px;font-size:8px">CAMERA</div>
+                    <div class="btn btn-quiet" style="padding:7px 2px;font-size:8px">LIBRARY</div>
+                  </div>
+                  <div class="field" style="padding:7px 8px;font-size:8px">Price, $ (optional)</div>
+                  <div class="btn btn-accent" style="padding:8px 2px;font-size:9px">ANALYZE</div>
+                </div>
+              </div>
+              <div class="tabbar">
+                <div class="tab on"><span class="tab-ico">▣</span>Scan</div>
+                <div class="tab"><span class="tab-ico">◷</span>History</div>
+                <div class="tab"><span class="tab-ico">☺</span>Profile</div>
+              </div>
+            </div>
+          </div>
+          <p class="stand-cap">Scan</p>
+        </div>
+
+        <div class="stand">
+          <img class="stand-bg" src="feral-scene-tub.png" alt="" aria-hidden="true" />
+          <div class="stand-veil" aria-hidden="true"></div>
+          <div class="device">
+            <div class="island"></div>
+            <div class="app">
+              <div class="app-scroll">
+                <div>
+                  <div class="app-logo" style="font-size:14px">SUPPCHECK</div>
+                  <div class="app-sub">No bullshit label check</div>
+                  <div class="hazard"></div>
+                </div>
+                <div class="card" style="gap:8px">
+                  <div class="score-row">
+                    <div class="score-box" style="width:46px;height:46px;font-size:26px">S</div>
+                    <div>
+                      <div class="stamp" style="font-size:10px">BUY</div>
+                      <div class="prod-brand" style="font-size:10px">Feral Supplements</div>
+                      <div class="prod-name">Stimmed As Fck</div>
+                    </div>
+                  </div>
+                  <div class="divider"></div>
+                  <div class="section-title">Verdict</div>
+                  <p class="body">Elite stack. Transparent doses. S-tier — buy it.</p>
+                  <div class="btn btn-accent" style="font-size:9px;padding:8px 2px">NEW SCAN</div>
+                </div>
+              </div>
+              <div class="tabbar">
+                <div class="tab on"><span class="tab-ico">▣</span>Scan</div>
+                <div class="tab"><span class="tab-ico">◷</span>History</div>
+                <div class="tab"><span class="tab-ico">☺</span>Profile</div>
+              </div>
+            </div>
+          </div>
+          <p class="stand-cap">Result · S</p>
+        </div>
+
+        <div class="stand">
+          <img class="stand-bg" src="feral-scene-hero.png" alt="" aria-hidden="true" />
+          <div class="stand-veil" aria-hidden="true"></div>
+          <div class="device">
+            <div class="island"></div>
+            <div class="app">
+              <div class="app-scroll">
+                <div>
+                  <div class="app-logo" style="font-size:14px">HISTORY</div>
+                  <div class="app-sub">Analyses in the last 30 days: 4</div>
+                  <div class="hazard"></div>
+                </div>
+                <div class="hist-card">
+                  <div class="hist-badge" style="border-color:var(--success);color:var(--success)">S</div>
+                  <div class="hist-info">
+                    <div class="hist-brand">Feral Supplements</div>
+                    <div class="hist-name">Stimmed As Fck</div>
+                    <div class="hist-date">Mar 28 · $44.95</div>
+                  </div>
+                  <div class="hist-verdict" style="color:var(--success)">BUY</div>
+                </div>
+                <div class="hist-card">
+                  <div class="hist-badge" style="border-color:var(--success);color:var(--success)">S</div>
+                  <div class="hist-info">
+                    <div class="hist-brand">Feral Supplements</div>
+                    <div class="hist-name">Vein Rage</div>
+                    <div class="hist-date">Mar 26 · $59.95</div>
+                  </div>
+                  <div class="hist-verdict" style="color:var(--success)">BUY</div>
+                </div>
+                <div class="hist-card">
+                  <div class="hist-badge" style="border-color:var(--score-b);color:var(--score-b)">B</div>
+                  <div class="hist-info">
+                    <div class="hist-brand">Random Pre</div>
+                    <div class="hist-name">Stim Bomb</div>
+                    <div class="hist-date">Mar 8 · $39.00</div>
+                  </div>
+                  <div class="hist-verdict" style="color:var(--score-b)">OK</div>
+                </div>
+              </div>
+              <div class="tabbar">
+                <div class="tab"><span class="tab-ico">▣</span>Scan</div>
+                <div class="tab on"><span class="tab-ico">◷</span>History</div>
+                <div class="tab"><span class="tab-ico">☺</span>Profile</div>
+              </div>
+            </div>
+          </div>
+          <p class="stand-cap">History</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="photos">
+    <p class="sec-label">03 · App screens</p>
+    <h2>SAME UI AS THE BUILD</h2>
+    <p class="lede">
+      These are not separate mock art — layout, copy, colors, and components match
+      <code style="color:var(--accent)">home</code>,
+      <code style="color:var(--accent)">scan-result</code>,
+      <code style="color:var(--accent)">history</code>.
+    </p>
+
+    <div class="shots">
+      <!-- SCAN -->
+      <figure class="shot">
+        <div class="device" aria-label="Home scan screen">
+          <div class="island"></div>
+          <div class="app">
+            <div class="app-scroll">
+              <div>
+                <div class="app-logo">SUPPCHECK</div>
+                <div class="app-sub">No bullshit label check</div>
+                <div class="hazard"></div>
+              </div>
+              <div class="card">
+                <div class="drop">
+                  <div class="drop-icon">📷</div>
+                  <div class="drop-text">SHOOT THE INGREDIENT PANEL</div>
+                </div>
+                <div class="row2">
+                  <div class="btn btn-ghost">CAMERA</div>
+                  <div class="btn btn-quiet">LIBRARY</div>
+                </div>
+                <div class="field">Price, $ (optional)</div>
+                <div class="btn btn-accent">ANALYZE</div>
+              </div>
+            </div>
+            <div class="tabbar">
+              <div class="tab on"><span class="tab-ico">▣</span>Scan</div>
+              <div class="tab"><span class="tab-ico">◷</span>History</div>
+              <div class="tab"><span class="tab-ico">☺</span>Profile</div>
+            </div>
+          </div>
+        </div>
+        <figcaption class="shot-cap">Home · Scan</figcaption>
+      </figure>
+
+      <!-- RESULT — Stimmed As Fck = S -->
+      <figure class="shot">
+        <div class="device" aria-label="Result screen S BUY">
+          <div class="island"></div>
+          <div class="app">
+            <div class="app-scroll">
+              <div>
+                <div class="app-logo" style="font-size:18px">SUPPCHECK</div>
+                <div class="app-sub">No bullshit label check</div>
+                <div class="hazard"></div>
+              </div>
+              <div class="card" style="gap:10px">
+                <div class="score-row">
+                  <div class="score-box">S</div>
+                  <div>
+                    <div class="stamp">BUY</div>
+                    <div class="prod-brand">Feral Supplements</div>
+                    <div class="prod-name">Stimmed As Fck</div>
+                  </div>
+                </div>
+                <div class="divider"></div>
+                <div class="section-title">Verdict</div>
+                <p class="body">Elite stim stack. Transparent doses, no mystery blends. Clinical amounts where it counts — S-tier. Buy it.</p>
+                <div class="mini-row">
+                  <div class="mini">
+                    <div class="mini-label">Value for money</div>
+                    <div class="mini-text">Strong for the dose density.</div>
+                  </div>
+                  <div class="mini">
+                    <div class="mini-label">Dosing</div>
+                    <div class="mini-text">Clinical on the core actives.</div>
+                  </div>
+                </div>
+                <div class="btn btn-accent" style="margin-top:2px">NEW SCAN</div>
+              </div>
+            </div>
+            <div class="tabbar">
+              <div class="tab on"><span class="tab-ico">▣</span>Scan</div>
+              <div class="tab"><span class="tab-ico">◷</span>History</div>
+              <div class="tab"><span class="tab-ico">☺</span>Profile</div>
+            </div>
+          </div>
+        </div>
+        <figcaption class="shot-cap">Result · S + BUY</figcaption>
+      </figure>
+
+      <!-- HISTORY -->
+      <figure class="shot">
+        <div class="device" aria-label="History screen">
+          <div class="island"></div>
+          <div class="app">
+            <div class="app-scroll">
+              <div>
+                <div class="app-logo">HISTORY</div>
+                <div class="app-sub">Analyses in the last 30 days: 4</div>
+                <div class="hazard"></div>
+              </div>
+              <div class="hist-card">
+                <div class="hist-badge" style="border-color:var(--success);color:var(--success)">S</div>
+                <div class="hist-info">
+                  <div class="hist-brand">Feral Supplements</div>
+                  <div class="hist-name">Stimmed As Fck</div>
+                  <div class="hist-date">Mar 28 · $44.95</div>
+                </div>
+                <div class="hist-verdict" style="color:var(--success)">BUY</div>
+              </div>
+              <div class="hist-card">
+                <div class="hist-badge" style="border-color:var(--success);color:var(--success)">S</div>
+                <div class="hist-info">
+                  <div class="hist-brand">Feral Supplements</div>
+                  <div class="hist-name">Vein Rage</div>
+                  <div class="hist-date">Mar 26 · $59.95</div>
+                </div>
+                <div class="hist-verdict" style="color:var(--success)">BUY</div>
+              </div>
+              <div class="hist-card">
+                <div class="hist-badge" style="border-color:var(--score-c);color:var(--score-c)">C</div>
+                <div class="hist-info">
+                  <div class="hist-brand">Generic Lab</div>
+                  <div class="hist-name">Cheap Isolate</div>
+                  <div class="hist-date">Mar 12 · $29.00</div>
+                </div>
+                <div class="hist-verdict" style="color:var(--score-b)">OK</div>
+              </div>
+              <div class="hist-card">
+                <div class="hist-badge" style="border-color:var(--score-b);color:var(--score-b)">B</div>
+                <div class="hist-info">
+                  <div class="hist-brand">Random Pre</div>
+                  <div class="hist-name">Stim Bomb</div>
+                  <div class="hist-date">Mar 8 · $39.00</div>
+                </div>
+                <div class="hist-verdict" style="color:var(--score-b)">OK</div>
+              </div>
+            </div>
+            <div class="tabbar">
+              <div class="tab"><span class="tab-ico">▣</span>Scan</div>
+              <div class="tab on"><span class="tab-ico">◷</span>History</div>
+              <div class="tab"><span class="tab-ico">☺</span>Profile</div>
+            </div>
+          </div>
+        </div>
+        <figcaption class="shot-cap">History · Feral = S</figcaption>
+      </figure>
+    </div>
+    <p class="phones-note">Source of truth: sportpit-app · theme.ts + kit + scan-result</p>
+  </section>
+
+  <section id="map">
+    <p class="sec-label">04 · What changes / what doesn’t</p>
+    <h2>SKIN, NOT SURGERY</h2>
+    <div class="map">
+      <dl>
+        <div>
+          <dt>SWAP</dt>
+          <dd>Cyan → flare orange. Soft pills → stencil score + hazard tape. Soft copy → Feral bluntness.</dd>
+        </div>
+        <div>
+          <dt>KEEP</dt>
+          <dd>Scan flow, S–F scale, BUY / OK / AVOID, allergens, credits / paywall, catalogue cache.</dd>
+        </div>
+        <div>
+          <dt>PITCH LINE</dt>
+          <dd>“Fans already trust your tubs. Give them a scanner that talks like you — and calls out everyone else’s filler.”</dd>
+        </div>
+      </dl>
+      <aside class="keep">
+        <p class="sec-label" style="margin-bottom:0.5rem">Why TrenTwins</p>
+        <h3 style="font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:0.03em;line-height:1;margin-bottom:0.25rem">
+          THEIR AUDIENCE ALREADY ARGUES ABOUT LABELS
+        </h3>
+        <ul>
+          <li>Co-branded “Powered by SuppCheck” for Feral drops</li>
+          <li>White-label skin for content / merch links</li>
+          <li>Honest scores on competitors — content engine</li>
+          <li>AI stack stays — only the face changed</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <section class="close">
+    <p class="sec-label">05 · Ask</p>
+    <h2>THIS IS THE LIVE SKIN</h2>
+    <p class="lede">
+      Lifestyle photos for the sell. UI phones match the Expo build.
+    </p>
+    <a class="close-cta" href="#world">SEE THE WORLD SHOTS</a>
+  </section>
+
+  <footer>
+    SuppCheck visual pitch · TrenTwins / Feral · UI mirrors production app · Not an official partnership
+  </footer>
+  <div class="tape-page" aria-hidden="true"></div>
+</body>
+</html>
