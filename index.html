@@ -94,8 +94,6 @@
       text-transform: uppercase;
       color: var(--accent);
       margin-bottom: 1.25rem;
-      opacity: 0;
-      animation: tick-in 0.45s ease 0.05s forwards;
     }
     .brand {
       font-family: "Bebas Neue", sans-serif;
@@ -106,28 +104,14 @@
       flex-direction: column;
     }
     .brand em { font-style: normal; color: var(--accent); }
-    /* Удар в пол: строка влетает крупнее и садится — как клеймо на банку */
-    .brand .stamp {
-      display: block;
-      opacity: 0;
-      transform: translateY(0.35em) scale(1.18);
-      filter: blur(4px);
-      animation: brand-stamp 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-    .brand .stamp:nth-child(2) { animation-delay: 0.12s; }
-    .brand .stamp:nth-child(3) { animation-delay: 0.24s; }
-    @keyframes brand-stamp {
-      60% { opacity: 1; filter: blur(0); transform: translateY(-0.04em) scale(0.98); }
-      100% { opacity: 1; filter: blur(0); transform: translateY(0) scale(1); }
-    }
+    /* Отдельный класс — не путать с .stamp (BUY-бейдж в мокапе телефона) */
+    .brand .brand-line { display: block; }
     .hero-line {
       margin-top: 1.5rem;
       max-width: 28ch;
       font-size: clamp(1.05rem, 2vw, 1.25rem);
       font-weight: 500;
       color: rgba(236, 231, 220, 0.82);
-      opacity: 0;
-      animation: tick-in 0.5s ease 0.45s forwards;
     }
     .hero-meta {
       margin-top: 2rem;
@@ -140,17 +124,6 @@
       text-transform: uppercase;
       color: var(--text-faint);
     }
-    .hero-meta span {
-      opacity: 0;
-      transform: translateX(-8px);
-      animation: tick-in 0.4s ease forwards;
-    }
-    .hero-meta span:nth-child(1) { animation-delay: 0.55s; }
-    .hero-meta span:nth-child(2) { animation-delay: 0.65s; }
-    .hero-meta span:nth-child(3) { animation-delay: 0.75s; }
-    @keyframes tick-in {
-      to { opacity: 1; transform: none; }
-    }
     .hero-visual {
       display: flex;
       align-items: center;
@@ -159,11 +132,49 @@
       min-height: 100vh;
       perspective: 1200px;
     }
-    .hero-visual .device {
-      opacity: 0;
-      transform: translateY(40px) rotateX(8deg) scale(0.94);
-      transform-origin: 50% 80%;
-      animation: phone-rise 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.35s forwards;
+    /*
+     * Анимации ТОЛЬКО если motion разрешён. Иначе контент остаётся видимым:
+     * раньше opacity:0 + animation ломали страницу, когда анимация не доигрывала
+     * (reduced-motion / блокировщики) — экран был пустым.
+     */
+    @media (prefers-reduced-motion: no-preference) {
+      .eyebrow {
+        opacity: 0;
+        animation: tick-in 0.45s ease 0.05s forwards;
+      }
+      .brand .brand-line {
+        opacity: 0;
+        transform: translateY(0.35em) scale(1.18);
+        filter: blur(4px);
+        animation: brand-stamp 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
+      .brand .brand-line:nth-child(2) { animation-delay: 0.12s; }
+      .brand .brand-line:nth-child(3) { animation-delay: 0.24s; }
+      .hero-line {
+        opacity: 0;
+        animation: tick-in 0.5s ease 0.45s forwards;
+      }
+      .hero-meta span {
+        opacity: 0;
+        transform: translateX(-8px);
+        animation: tick-in 0.4s ease forwards;
+      }
+      .hero-meta span:nth-child(1) { animation-delay: 0.55s; }
+      .hero-meta span:nth-child(2) { animation-delay: 0.65s; }
+      .hero-meta span:nth-child(3) { animation-delay: 0.75s; }
+      .hero-visual .device {
+        opacity: 0;
+        transform: translateY(40px) rotateX(8deg) scale(0.94);
+        transform-origin: 50% 80%;
+        animation: phone-rise 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.35s forwards;
+      }
+    }
+    @keyframes brand-stamp {
+      60% { opacity: 1; filter: blur(0); transform: translateY(-0.04em) scale(0.98); }
+      100% { opacity: 1; filter: blur(0); transform: translateY(0) scale(1); }
+    }
+    @keyframes tick-in {
+      to { opacity: 1; transform: none; }
     }
     @keyframes phone-rise {
       to { opacity: 1; transform: translateY(0) rotateX(0) scale(1); }
@@ -788,57 +799,49 @@
     }
     .close-cta:active { transform: translateY(1px) scale(0.98); }
 
-    /* Stencil wipe при скролле — жёсткий край, не мягкий fade (wellness) */
-    .reveal {
-      opacity: 0;
-      transform: translateY(28px);
-      clip-path: inset(0 0 100% 0);
-      transition:
-        opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
-        transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
-        clip-path 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .reveal.in {
-      opacity: 1;
-      transform: none;
-      clip-path: inset(0 0 0 0);
-    }
-    .reveal-delay-1 { transition-delay: 0.08s; }
-    .reveal-delay-2 { transition-delay: 0.16s; }
-    .reveal-delay-3 { transition-delay: 0.24s; }
+    /*
+     * Scroll-reveal прячет контент ТОЛЬКО когда JS повесил html.motion.
+     * Без JS / при reduced-motion класс не ставится — страница всегда читаема.
+     */
+    @media (prefers-reduced-motion: no-preference) {
+      html.motion .reveal:not(.in) {
+        opacity: 0;
+        transform: translateY(28px);
+        clip-path: inset(0 0 100% 0);
+      }
+      html.motion .reveal {
+        transition:
+          opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+          transform 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+          clip-path 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      html.motion .reveal.in {
+        opacity: 1;
+        transform: none;
+        clip-path: inset(0 0 0 0);
+      }
+      html.motion .reveal-delay-1 { transition-delay: 0.08s; }
+      html.motion .reveal-delay-2 { transition-delay: 0.16s; }
+      html.motion .reveal-delay-3 { transition-delay: 0.24s; }
 
-    .stamp-hit {
-      display: inline-block;
-      transform: scale(1.4);
-      opacity: 0;
-      transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
-    }
-    .reveal.in .stamp-hit,
-    .stamp-hit.in {
-      transform: scale(1);
-      opacity: 1;
-    }
+      .shot, .stand, .dna-cell {
+        transition: border-color 0.25s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .shot:hover, .stand:hover {
+        border-color: rgba(255, 77, 0, 0.45);
+        transform: translateY(-4px);
+      }
+      .dna-cell:hover { background: #161616; }
 
-    .shot, .stand, .dna-cell {
-      transition: border-color 0.25s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      .hero-visual .device:hover .scale-letter {
+        animation: letter-kick 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+      }
+      .hero-visual .device:hover .scale-item:nth-child(2) .scale-letter { animation-delay: 0.04s; }
+      .hero-visual .device:hover .scale-item:nth-child(3) .scale-letter { animation-delay: 0.08s; }
+      .hero-visual .device:hover .scale-item:nth-child(4) .scale-letter { animation-delay: 0.12s; }
+      .hero-visual .device:hover .scale-item:nth-child(5) .scale-letter { animation-delay: 0.16s; }
+      .hero-visual .device:hover .scale-item:nth-child(6) .scale-letter { animation-delay: 0.2s; }
     }
-    .shot:hover, .stand:hover {
-      border-color: rgba(255, 77, 0, 0.45);
-      transform: translateY(-4px);
-    }
-    .dna-cell:hover { background: #161616; }
-
-    .app .scale-letter {
-      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .hero-visual .device:hover .scale-letter {
-      animation: letter-kick 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
-    }
-    .hero-visual .device:hover .scale-item:nth-child(2) .scale-letter { animation-delay: 0.04s; }
-    .hero-visual .device:hover .scale-item:nth-child(3) .scale-letter { animation-delay: 0.08s; }
-    .hero-visual .device:hover .scale-item:nth-child(4) .scale-letter { animation-delay: 0.12s; }
-    .hero-visual .device:hover .scale-item:nth-child(5) .scale-letter { animation-delay: 0.16s; }
-    .hero-visual .device:hover .scale-item:nth-child(6) .scale-letter { animation-delay: 0.2s; }
     @keyframes letter-kick {
       0% { transform: scale(1); }
       40% { transform: scale(1.25); }
@@ -846,18 +849,7 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-      }
-      .brand .stamp, .eyebrow, .hero-line, .hero-meta span, .hero-visual .device,
-      .reveal {
-        opacity: 1 !important;
-        transform: none !important;
-        filter: none !important;
-        clip-path: none !important;
-      }
+      .tape-page, .hazard, .hero::before { animation: none !important; }
     }
     footer {
       padding: 1.5rem clamp(1.25rem, 5vw, 4.5rem) 2.5rem;
@@ -888,9 +880,9 @@
     <div class="hero-copy">
       <p class="eyebrow">Private visual pitch · SuppCheck × Feral</p>
       <h1 class="brand">
-        <span class="stamp">SUPPCHECK</span>
-        <span class="stamp"><em>FOR</em></span>
-        <span class="stamp">FERAL</span>
+        <span class="brand-line">SUPPCHECK</span>
+        <span class="brand-line"><em>FOR</em></span>
+        <span class="brand-line">FERAL</span>
       </h1>
       <p class="hero-line">
         Screens below are the same UI as the live Expo app — not a separate design.
@@ -1366,12 +1358,12 @@
 
 <script>
   (function () {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('in'); });
-      return;
-    }
+    // Без motion — ничего не прячем. Класс html.motion включает hide→reveal в CSS.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    var nodes = document.querySelectorAll('.reveal, .world-hero, .pair, .world-trio .stand, .shots .shot, .map > *');
+    document.documentElement.classList.add('motion');
+
+    var nodes = document.querySelectorAll('.reveal, .world-hero, .pair, .world-trio .stand, .shots .shot, .map > dl, .map > aside');
     nodes.forEach(function (el) {
       if (!el.classList.contains('reveal')) el.classList.add('reveal');
     });
@@ -1382,7 +1374,7 @@
         entry.target.classList.add('in');
         io.unobserve(entry.target);
       });
-    }, { threshold: 0.18, rootMargin: '0px 0px -8% 0px' });
+    }, { threshold: 0.12, rootMargin: '0px 0px -5% 0px' });
 
     document.querySelectorAll('.reveal').forEach(function (el) { io.observe(el); });
   })();
