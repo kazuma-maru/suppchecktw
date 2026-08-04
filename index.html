@@ -352,8 +352,12 @@
       height: 7px;
       border-radius: 1px;
       background: repeating-linear-gradient(-45deg, var(--warn) 0 7px, var(--bg) 7px 14px);
+      /* Сдвиг = background-size по X, иначе loop даёт паузу/скачок (как было с 34px) */
       background-size: 28px 7px;
-      animation: tape-crawl 1.4s linear infinite;
+      animation: hazard-crawl 1.1s linear infinite;
+    }
+    @keyframes hazard-crawl {
+      to { background-position: 28px 0; }
     }
 
     .card {
@@ -570,6 +574,62 @@
       letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--text-faint);
+    }
+
+    /* ——— Tren Twins reel: тот же hero-mp4, что на feralsupplements.com ——— */
+    .twins-reel {
+      position: relative;
+      min-height: min(92vh, 900px);
+      overflow: hidden;
+      background: #000;
+      border-top: 1px solid var(--line);
+    }
+    .twins-reel video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      /* Ч/б уже в файле (hue=s=0); лёгкий контраст поверх */
+      filter: contrast(1.08) brightness(0.94);
+    }
+    .twins-reel-fade {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(180deg, rgba(7,7,7,0.35) 0%, transparent 28%, transparent 55%, rgba(7,7,7,0.85) 100%);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .twins-reel-copy {
+      position: absolute;
+      left: clamp(1.25rem, 5vw, 4.5rem);
+      right: clamp(1.25rem, 5vw, 4.5rem);
+      bottom: clamp(1.5rem, 5vw, 3rem);
+      z-index: 2;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 1rem 2rem;
+    }
+    .twins-reel-copy .sec-label { margin-bottom: 0.4rem; }
+    .twins-reel-copy h2 {
+      font-family: "Bebas Neue", sans-serif;
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      line-height: 0.92;
+      letter-spacing: 0.02em;
+      margin: 0;
+      max-width: 14ch;
+    }
+    .twins-reel-meta {
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      max-width: 28ch;
+      text-align: right;
     }
 
     /* ——— Lifestyle: продукты отдельно, телефон — один и цельный ——— */
@@ -824,6 +884,9 @@
     @media (max-width: 960px) {
       .hero { grid-template-columns: 1fr; min-height: auto; }
       .hero-visual { min-height: auto; order: -1; padding: 1.5rem 1.25rem 0; }
+      .twins-reel { min-height: 70vh; }
+      .twins-reel-copy { flex-direction: column; align-items: flex-start; }
+      .twins-reel-meta { text-align: left; }
       .dna-grid, .shots, .map, .pair, .world-trio { grid-template-columns: 1fr; }
       .pair { min-height: auto; }
       .pair-photo { min-height: 280px; }
@@ -897,6 +960,28 @@
       </div>
     </div>
   </header>
+
+  <!-- Локально: TikTok-ролик твинов, сжатый H.264 ~web loop -->
+  <section id="twins" class="twins-reel" aria-label="Tren Twins — Feral brand reel">
+    <video
+      src="twins-reel.mp4"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+    ></video>
+    <div class="twins-reel-fade" aria-hidden="true"></div>
+    <div class="twins-reel-copy">
+      <div>
+        <p class="sec-label">01b · The faces</p>
+        <h2>TREN TWINS</h2>
+      </div>
+      <p class="twins-reel-meta">
+        Local reel · mono grade · compressed for the pitch
+      </p>
+    </div>
+  </section>
 
   <section id="read">
     <p class="sec-label reveal">01 · Brand read</p>
