@@ -912,8 +912,8 @@
       </p>
       <div class="hero-meta">
         <span>Scan → Score → Verdict</span>
-        <span>S for Feral</span>
-        <span>Tokens from theme.ts</span>
+        <span>Share card · 90-day history</span>
+        <span>$4.49/10 · $9.99/25</span>
       </div>
     </div>
     <div class="hero-visual">
@@ -1062,6 +1062,7 @@
                   <div class="divider"></div>
                   <div class="section-title">Verdict</div>
                   <p class="body">Elite stack. Transparent doses. S-tier — buy it.</p>
+                  <div class="btn btn-ghost" style="font-size:9px;padding:8px 2px">SHARE</div>
                   <div class="btn btn-accent" style="font-size:9px;padding:8px 2px">NEW SCAN</div>
                 </div>
               </div>
@@ -1136,6 +1137,7 @@
                   <div class="divider"></div>
                   <div class="section-title">Verdict</div>
                   <p class="body">Elite stack. Transparent doses. S-tier — buy it.</p>
+                  <div class="btn btn-ghost" style="font-size:9px;padding:8px 2px">SHARE</div>
                   <div class="btn btn-accent" style="font-size:9px;padding:8px 2px">NEW SCAN</div>
                 </div>
               </div>
@@ -1158,7 +1160,7 @@
               <div class="app-scroll">
                 <div>
                   <div class="app-logo" style="font-size:14px">HISTORY</div>
-                  <div class="app-sub">Analyses in the last 30 days: 4</div>
+                  <div class="app-sub">Analyses in the last 90 days: 4</div>
                   <div class="hazard"></div>
                 </div>
                 <div class="hist-card">
@@ -1209,7 +1211,9 @@
       These are not separate mock art — layout, copy, colors, and components match
       <code style="color:var(--accent)">home</code>,
       <code style="color:var(--accent)">scan-result</code>,
-      <code style="color:var(--accent)">history</code>.
+      <code style="color:var(--accent)">share-card</code>,
+      <code style="color:var(--accent)">history</code>
+      (90-day retention, dual packs).
     </p>
 
     <div class="shots">
@@ -1280,7 +1284,8 @@
                     <div class="mini-text">Clinical on the core actives.</div>
                   </div>
                 </div>
-                <div class="btn btn-accent" style="margin-top:2px">NEW SCAN</div>
+                <div class="btn btn-ghost" style="margin-top:2px">SHARE</div>
+                <div class="btn btn-accent">NEW SCAN</div>
               </div>
             </div>
             <div class="tabbar">
@@ -1290,7 +1295,33 @@
             </div>
           </div>
         </div>
-        <figcaption class="shot-cap">Result · S + BUY</figcaption>
+        <figcaption class="shot-cap">Result · S + BUY · Share</figcaption>
+      </figure>
+
+      <!-- SHARE CARD — story PNG layout (components/share-card.tsx) -->
+      <figure class="shot">
+        <div class="device" aria-label="Share card for Stories">
+          <div class="island"></div>
+          <div class="app" style="background:#070707">
+            <div class="app-scroll" style="justify-content:space-between;padding:18px 14px 22px">
+              <div class="app-logo" style="font-size:11px;letter-spacing:4px;opacity:0.55">SUPPCHECK</div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:12px;padding:8px 0 16px">
+                <div class="score-box" style="width:72px;height:72px;font-size:42px;border-color:var(--success);color:var(--success)">S</div>
+                <div class="stamp" style="font-size:14px;border-color:var(--success);color:var(--success)">BUY</div>
+                <div style="text-align:center">
+                  <div class="prod-brand" style="font-size:11px">Feral Supplements</div>
+                  <div class="prod-name" style="font-size:16px;margin-top:4px">Stimmed As Fck</div>
+                </div>
+                <p class="body" style="text-align:center;font-size:10px;max-width:180px">Elite stim stack. Transparent doses — S-tier. Buy it.</p>
+              </div>
+              <div style="text-align:center">
+                <div style="font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent)">Scan the label</div>
+                <div style="font-size:7px;margin-top:4px;color:var(--text-faint)">Not medical advice</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <figcaption class="shot-cap">Share card · Stories PNG</figcaption>
       </figure>
 
       <!-- HISTORY -->
@@ -1301,7 +1332,7 @@
             <div class="app-scroll">
               <div>
                 <div class="app-logo">HISTORY</div>
-                <div class="app-sub">Analyses in the last 30 days: 4</div>
+                <div class="app-sub">Analyses in the last 90 days: 4</div>
                 <div class="hazard"></div>
               </div>
               <div class="hist-card">
@@ -1365,7 +1396,7 @@
         </div>
         <div>
           <dt>KEEP</dt>
-          <dd>Scan flow, S–F scale, BUY / OK / AVOID, allergens, credits / paywall, catalogue cache.</dd>
+          <dd>Scan flow, S–F scale, BUY / OK / AVOID, allergens, share cards, 90-day history, dual credit packs ($4.49/10 · $9.99/25), catalogue cache.</dd>
         </div>
         <div>
           <dt>PITCH LINE</dt>
@@ -1381,6 +1412,7 @@
           <li>Co-branded “Powered by SuppCheck” for Feral drops</li>
           <li>White-label skin for content / merch links</li>
           <li>Honest scores on competitors — content engine</li>
+          <li>Built-in share card = free UGC for Stories</li>
           <li>AI stack stays — only the face changed</li>
         </ul>
       </aside>
